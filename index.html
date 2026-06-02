@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EconomClass — Сучасний Секонд-Хенд в Одесі</title>
+    <style>
+        /* Сучасна жовто-чорна палітра */
+        :root {
+            --primary-color: #facc15; /* Трендовий яскраво-жовтий */
+            --bg-black: #09090b;      /* Глибокий матовий чорний */
+            --bg-card: #18181b;       /* Графітовий для карток та блоків */
+            --text-light: #f4f4f5;     /* Майже білий для тексту */
+            --text-muted: #a1a1aa;     /* Сірий для другорядного тексту */
+            --border-color: #27272a;   /* Стримані темні рамки */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            color: var(--text-light);
+            background-color: var(--bg-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* --- ВОДЯНІ ЗНАКИ (Вздовж всього сайту) --- */
+        .watermark-sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            width: 100px;
+            pointer-events: none; /* Щоб кліки проходили крізь них */
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            opacity: 0.07; /* Ледь помітні, як на фото/відео */
+            user-select: none;
+        }
+
+        .watermark-left { left: 10px; }
+        .watermark-right { right: 10px; }
+
+        .wm-text {
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--primary-color);
+            transform: rotate(-30deg);
+            white-space: nowrap;
+            letter-spacing: 1px;
+        }
+
+        /* Приховуємо водяні знаки на малих екранах, щоб не перекривати мобільну верстку */
+        @media (max-width: 1024px) {
+            .watermark-sidebar { display: none; }
+        }
+
+        /* Шапка сайту (Header) */
+        header {
+            background-color: rgba(9, 9, 11, 0.9);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--primary-color);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--text-light);
+        }
+
+        .header-contacts {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-badge {
+            background-color: #16a34a;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: #000000;
+            padding: 14px 28px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+            border: 2px solid var(--primary-color);
+            text-align: center;
+        }
+
+        .btn:hover {
+            background-color: transparent;
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-light);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Головний екран (Hero Section) */
+        .hero {
+            padding: 180px 0 100px 0;
+            background: radial-gradient(circle at top right, rgba(250, 204, 21, 0.15), transparent 50%);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 24px;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+
+        .hero h1 span {
+            color: var(--primary-color);
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Блок переваг */
+        .advantages {
+            padding: 100px 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 60px;
+            text-transform: uppercase;
+        }
+
+        .section-title span {
+            color: var(--primary-color);
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            padding: 35px 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-5px);
+        }
+
+        .card-icon {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        /* Про нас та Відгуки */
+        .reviews {
+            padding: 100px 0;
+            background-color: #121214;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .rating-box {
+            background-color: var(--bg-black);
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 50px 40px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .stars {
+            color: var(--primary-color);
+            font-size: 28px;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .rating-number {
+            font-size: 56px;
+            font-weight: 900;
+            color: var(--text-light);
+            line-height: 1;
+            margin-bottom: 10px;
+        }
+
+        .rating-text {
+            font-size: 16px;
+            color: var(--text-muted);
+        }
+
+        .rating-text strong {
+            color: var(--primary-color);
+        }
+
+        /* Контакти та Карта */
+        .contacts {
+            padding: 100px 0;
+        }
+
+        .contacts-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .contacts-info {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .contacts-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .info-item {
+            margin-bottom: 25px;
+        }
+
+        .info-item strong {
+            display: block;
+            color: var(--primary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .info-item p {
+            font-size: 17px;
+            color: var(--text-light);
+        }
+
+        .map-container {
+            flex: 1;
+            min-width: 300px;
+            height: 380px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        /* Спеціальний фільтр для інтеграції карти в темний стиль */
+        .map-container iframe {
+            filter: invert(90%) hue-rotate(180deg) grayscale(30%);
+        }
+
+        /* Футер */
+        footer {
+            background-color: #040405;
+            border-top: 1px solid var(--border-color);
+            padding: 40px 0;
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* Адаптивність */
+        @media (max-width: 768px) {
+            header .container {
+                flex-direction: column;
+                height: auto;
+                padding: 15px 20px;
+                gap: 15px;
+            }
+            .header-contacts {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .hero {
+                padding: 220px 0 80px 0;
+            }
+            .hero h1 {
+                font-size: 34px;
+            }
+            .contacts-wrapper {
+                flex-direction: column;
+                gap: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="watermark-sidebar watermark-left">
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+    </div>
+
+    <div class="watermark-sidebar watermark-right">
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+        <div class="wm-text">@Rifemane</div>
+    </div>
+
+    <header>
+        <div class="container">
+            <a href="#" class="logo">Econom<span>Class</span></a>
+            <div class="header-contacts">
+                <span class="status-badge">До 18:00</span>
+                <a href="https://maps.google.com/?q=проспект+Князя+Володимира+Великого+125+Одеса" target="_blank" class="btn btn-outline" style="padding: 10px 18px; font-size: 13px;">Маршрут</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Стильний одяг для кожного<br>за <span>чесною ціною</span> в Одесі</h1>
+                <p>Магазин «Економ Клас» — це величезний асортимент речей ідеальної якості та бездоганного стану. Одягайтеся трендово, не переплачуючи за бренди.</p>
+                <div class="hero-buttons">
+                    <a href="#contacts" class="btn">Графік роботи</a>
+                    <a href="https://maps.google.com/?q=проспект+Князя+Володимира+Великого+125+Одеса" target="_blank" class="btn btn-outline">Карта проїзду</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="advantages">
+            <div class="container">
+                <h2 class="section-title">Чому <span>обирають нас</span></h2>
+                <div class="grid-4">
+                    <div class="card">
+                        <div class="card-icon">⚡</div>
+                        <h3>Багатий асортимент</h3>
+                        <p>Величезний вибір одягу для всієї родини, який регулярно оновлюється трендовими речами.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">👑</div>
+                        <h3>Ідеальний стан</h3>
+                        <p>Ретельно відбираємо товар. У нас ви знайдете одяг відмінної якості та світових брендів у бездоганному стані.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🔥</div>
+                        <h3>Низькі ціни</h3>
+                        <p>Найкраще співвідношення ціни та якості в Одесі. Модний лук тепер доступний кожному.</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">✌️</div>
+                        <h3>Ввічливий персонал</h3>
+                        <p>Наші консультанти завжди допоможуть зібрати крутий образ та створять затишну атмосферу для шопінгу.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reviews">
+            <div class="container">
+                <div class="rating-box">
+                    <div class="stars">★★★★★</div>
+                    <div class="rating-number">4,1</div>
+                    <div class="rating-text">Наш офіційний рейтинг у Google Maps побудований на основі <strong>498 реальних відгуків</strong> від одеситів. Довіра, перевірена роками!</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="contacts" id="contacts">
+            <div class="container">
+                <div class="contacts-wrapper">
+                    <div class="contacts-info">
+                        <h3>Чекаємо на вас</h3>
+                        <div class="info-item">
+                            <strong>Локація:</strong>
+                            <p>м. Одеса, проспект Князя Володимира Великого, 125 (індекс 65000)</p>
+                        </div>
+                        <div class="info-item">
+                            <strong>Час роботи:</strong>
+                            <p>Працюємо щодня. Двері відчинені до 18:00.</p>
+                        </div>
+                        <a href="https://maps.google.com/?q=проспект+Князя+Володимира+Великого+125+Одеса" target="_blank" class="btn" style="margin-top: 10px;">Відкрити навігатор</a>
+                    </div>
+                    <div class="map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m4!2sOdesa!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40c6318a0b5847b3%3A0x2a2f4d17db69234b!2sOdesa%2C+Odesa+Oblast!5e0!3m2!1sen!2sua!4v1650000000000!5m2!1sen!2sua" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Концепт сайту «EconomClass». Створено з повагою до стилю Одеси.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
